@@ -6,7 +6,7 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: triagem.handler
-      Runtime: python3.6
+      Runtime: python3.7
       Description: ''
       MemorySize: 128
       Timeout: 15
