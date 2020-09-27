@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: Demo TFC StepFunctions e Lambda com triagem de COVID-19
+Resources:
+  TriagemFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: triagem.handler
+      Runtime: python3.6
+      Description: ''
+      MemorySize: 128
+      Timeout: 15
+      CodeUri: procedimento-clinico/
+  CovidStateMachine:
+    Type: 'AWS::Serverless::StateMachine'
+    Properties:
+      DefinitionUri: statemachine/covid19-workflow.asl.json
+      DefinitionSubstitutions:
+        TriagemFunctionArn:
+          'Fn::GetAtt':
+            - TriagemFunction
+            - Arn
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName:
+              Ref: TriagemFunction
+
+Outputs:
+  TriagemFunctionArn:
+    Description: TriagemFunction Application ARN
+    Value:
+      'Fn::GetAtt':
+        - TriagemFunction
+        - Arn
+        
+  CovidStateMachineArn:
+    Value:
+      'Fn::GetAtt':
+        - CovidStateMachine
+        - Arn

@@ -1,0 +1,8 @@
+{
+    "triagem": {
+        "lambda": {
+            "paciente": "123456",
+            "temperatura": 38
+        }
+    }
+}

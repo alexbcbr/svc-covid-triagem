@@ -1,0 +1,16 @@
+{
+  "Comment": "Avaliacao de COVID-19",
+  "StartAt": "coletar-temperatura",
+  "States": {
+    "coletar-temperatura": {
+      "Type": "Task",
+      "Resource": "${TriagemFunctionArn}",
+      "Next": "triagem"
+    },
+    "triagem": {
+      "Type": "Pass",
+      "Result": "Triagem",
+      "End": true
+    }
+  }
+}
