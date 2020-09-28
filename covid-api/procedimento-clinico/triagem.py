@@ -4,9 +4,7 @@ def handler(event, context):
         resultado = "quarantena"
     else:
         resultado = "liberado"
-    
-    message = 'Paciente {} {}!'.format(event['paciente'], resultado)
-    
+       
     return { 
-        'message' : message
+        'diagnostico' : resultado
     }

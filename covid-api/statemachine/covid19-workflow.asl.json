@@ -5,11 +5,25 @@
     "coletar-temperatura": {
       "Type": "Task",
       "Resource": "${TriagemFunctionArn}",
-      "Next": "triagem"
+      "ResultPath": "$.laudo",
+      "Next": "registrar-laudo"
     },
-    "triagem": {
+    "registrar-laudo": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::dynamodb:putItem",
+      "Parameters": {
+        "TableName": "covid_MedicalRecord",
+        "Item": {
+          "id": "$$.Execution.paciente-id",
+          "temperatura": "$$.Execution.temperatura"
+        }
+      },
+      "ResultPath": "$.DynamoDB",
+      "Next": "marcar-consulta"
+    },    
+    "marcar-consulta": {
       "Type": "Pass",
-      "Result": "Triagem",
+      "Result": "consulta-agendada",
       "End": true
     }
   }

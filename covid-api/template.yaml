@@ -11,6 +11,30 @@ Resources:
       MemorySize: 128
       Timeout: 15
       CodeUri: procedimento-clinico/
+
+  MedicalRecordTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName:
+        'Fn::Sub': 'covid_MedicalRecord'
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: temperatura
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      GlobalSecondaryIndexes:
+        - IndexName: temperatura
+          KeySchema:
+            - AttributeName: temperatura
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+
+
   CovidStateMachine:
     Type: 'AWS::Serverless::StateMachine'
     Properties:
@@ -24,6 +48,9 @@ Resources:
         - LambdaInvokePolicy:
             FunctionName:
               Ref: TriagemFunction
+        - DynamoDBCrudPolicy:
+            TableName:
+              Ref: MedicalRecordTable
 
 Outputs:
   TriagemFunctionArn:
