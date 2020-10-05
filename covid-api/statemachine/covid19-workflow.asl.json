@@ -25,13 +25,42 @@
       "Type": "Task",
       "Resource": "${TriagemFunctionArn}",
       "ResultPath": "$.laudo",
-      "Next": "pagamento-consulta"
+      "Next": "pagamento-consulta",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "IntervalSeconds": 1,
+          "MaxAttempts": 3
+        }
+      ],
+      "Catch": [ {
+        "ErrorEquals": ["States.All"],
+        "Next": "cancelar-consulta"
+      }]
     },
 
     "pagamento-consulta": {
+      "Type": "Task",
+      "Resource": "${TriagemFunctionArn}",
+      "ResultPath": "$.laudo",
+      "Next": "registrar-laudo",
+      "Catch": [ {
+        "ErrorEquals": ["States.All"],
+        "Next": "cancelar-pagamento-consulta"
+      }]
+    },
+
+    "cancelar-pagamento-consulta": {
       "Type": "Pass",
       "Next": "registrar-laudo"
-    },  
+    },
+
+    "cancelar-consulta": {
+      "Type": "Pass",
+      "Next": "registrar-laudo"
+    },
 
     "registrar-laudo": {
       "Type": "Task",
@@ -59,5 +88,6 @@
       "ResultPath": "$.DynamoDB",
       "End": true
     }
+
   }
 }
