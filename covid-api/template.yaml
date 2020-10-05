@@ -1,16 +1,44 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: Demo TFC StepFunctions e Lambda com triagem de COVID-19
+Globals:
+  Function:
+    MemorySize: 128
+    Timeout: 15
+    Runtime: python3.7
+
+Parameters:
+  MyEnvironment: 
+    Type: String
+    Default: dev
+    AllowedValues: 
+      - dev
+      - prod
+
+Mappings:
+  ResourcesName:
+    dev:
+      tableName: covid_MyDyname-dev
+    prod:
+      tableName: covid_MyDyname-prod
+
 Resources:
   TriagemFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: triagem.handler
-      Runtime: python3.7
-      Description: ''
-      MemorySize: 128
-      Timeout: 15
       CodeUri: procedimento-clinico/
+
+  AgendarConsultaFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: agendamento.handler
+      Description: ''
+      CodeUri: marcar-consulta/
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: 
+              Ref: MedicalBookingTable
 
   MedicalRecordTable:
     Type: 'AWS::DynamoDB::Table'
@@ -34,7 +62,28 @@ Resources:
           Projection:
             ProjectionType: ALL
 
-
+  MedicalBookingTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName:
+        'Fn::FindInMap': [ResourcesName, !Ref MyEnvironment, tableName]
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: temperatura
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      GlobalSecondaryIndexes:
+        - IndexName: temperatura
+          KeySchema:
+            - AttributeName: temperatura
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+            
   CovidStateMachine:
     Type: 'AWS::Serverless::StateMachine'
     Properties:

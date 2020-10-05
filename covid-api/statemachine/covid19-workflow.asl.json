@@ -6,24 +6,57 @@
       "Type": "Task",
       "Resource": "${TriagemFunctionArn}",
       "ResultPath": "$.laudo",
-      "Next": "registrar-laudo"
+      "Next": "checar-recomendacao-clinica"
     },
+
+    "checar-recomendacao-clinica": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.laudo.diagnostico",
+          "StringEquals": "quarantena",
+          "Next": "marcar-consulta"
+        }
+      ],
+      "Default": "registrar-laudo"
+    },
+
+    "marcar-consulta": {
+      "Type": "Task",
+      "Resource": "${TriagemFunctionArn}",
+      "ResultPath": "$.laudo",
+      "Next": "pagamento-consulta"
+    },
+
+    "pagamento-consulta": {
+      "Type": "Pass",
+      "Next": "registrar-laudo"
+    },  
+
     "registrar-laudo": {
       "Type": "Task",
       "Resource": "arn:aws:states:::dynamodb:putItem",
       "Parameters": {
         "TableName": "covid_MedicalRecord",
         "Item": {
-          "id": "$$.Execution.paciente-id",
-          "temperatura": "$$.Execution.temperatura"
+          "id": {
+            "S.$": "$.paciente-id"
+          },
+          "temperatura": {
+            "S.$": "$.temperatura"
+          }
         }
       },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Sates.ALL"
+          ],
+          "IntervalSeconds": 1,
+          "MaxAttempts": 3
+        }
+      ],
       "ResultPath": "$.DynamoDB",
-      "Next": "marcar-consulta"
-    },    
-    "marcar-consulta": {
-      "Type": "Pass",
-      "Result": "consulta-agendada",
       "End": true
     }
   }

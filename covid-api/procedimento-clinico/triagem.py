@@ -1,6 +1,6 @@
 def handler(event, context):
     
-    if (event['temperatura']) > 37:
+    if (int(event['temperatura'])) > 37:
         resultado = "quarantena"
     else:
         resultado = "liberado"
