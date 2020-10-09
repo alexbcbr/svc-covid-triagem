@@ -1,0 +1,14 @@
+sam build && sam deploy
+
+curl -X POST -d '{
+   "input": "{\"paciente-id\": \"AB123456\",\"temperatura\": \"36\"}",
+   "name": "MyExecution22",
+   "stateMachineArn": "arn:aws:states:us-east-1:771620814942:stateMachine:CovidStateMachine-LAAEqiEc4IeQ"
+}' https://x3bx69tk71.execute-api.us-east-1.amazonaws.com/prod/triagem
+
+{
+   "input": "{\"paciente-id\": \"AB123456\",\"temperatura\": \"36\"}",
+   "name": "MyExecution21",
+   "stateMachineArn": "arn:aws:states:us-east-1:771620814942:stateMachine:CovidStateMachine-LAAEqiEc4IeQ"
+}
+

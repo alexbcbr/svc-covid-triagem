@@ -23,6 +23,10 @@ Mappings:
       tableName: covid_MyDyname-prod
 
 Resources:
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
   TriagemFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
@@ -35,6 +39,14 @@ Resources:
       Handler: agendamento.handler
       Description: ''
       CodeUri: marcar-consulta/
+      Events:
+        APIEvent:
+          Type: Api
+          Properties:
+            Path: '/agendamento'
+            Method: get
+            RestApiId:
+              Ref: ApiGateway
       Policies:
         - DynamoDBReadPolicy:
             TableName: 
@@ -88,6 +100,14 @@ Resources:
     Type: 'AWS::Serverless::StateMachine'
     Properties:
       DefinitionUri: statemachine/covid19-workflow.asl.json
+      Events:
+        HttpPost:
+          Type: Api
+          Properties:
+            Path: '/triagem'
+            Method: post
+            RestApiId:
+              Ref: ApiGateway
       DefinitionSubstitutions:
         TriagemFunctionArn:
           'Fn::GetAtt':
