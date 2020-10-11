@@ -23,7 +23,14 @@
 
     "marcar-consulta": {
       "Type": "Task",
-      "Resource": "${TriagemFunctionArn}",
+      "Resource": "arn:aws:states:::sqs:sendMessage.waitForTaskToken",
+      "Parameters": {
+        "QueueUrl": "${SQSQueueLegacyBookingURL}",
+        "MessageBody": {
+          "MessageTitle": "Task started by Step Functions. Waiting for callback with task token.",
+          "TaskToken.$": "$$.Task.Token"
+        }
+      },
       "ResultPath": "$.laudo",
       "Next": "pagamento-consulta",
       "Retry": [

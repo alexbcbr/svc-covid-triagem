@@ -23,6 +23,9 @@ Mappings:
       tableName: covid_MyDyname-prod
 
 Resources:
+  SQSQueueLegacyBooking:
+    Type: AWS::SQS::Queue
+
   ApiGateway:
     Type: AWS::Serverless::Api
     Properties:
@@ -40,6 +43,12 @@ Resources:
       Description: ''
       CodeUri: marcar-consulta/
       Events:
+        MySQSEvent:
+          Type: SQS
+          Properties:
+            Queue: 
+              'Fn::GetAtt': SQSQueueLegacyBooking.Arn
+            BatchSize: 10
         APIEvent:
           Type: Api
           Properties:
@@ -113,6 +122,8 @@ Resources:
           'Fn::GetAtt':
             - TriagemFunction
             - Arn
+        SQSQueueLegacyBookingURL:
+            'Ref': SQSQueueLegacyBooking
       Policies:
         - LambdaInvokePolicy:
             FunctionName:
@@ -120,6 +131,12 @@ Resources:
         - DynamoDBCrudPolicy:
             TableName:
               Ref: MedicalRecordTable
+        - SQSSendMessagePolicy:
+            QueueName:
+              'Fn::GetAtt': SQSQueueLegacyBooking.QueueName
+        - SQSPollerPolicy:
+            QueueName:
+              'Fn::GetAtt': SQSQueueLegacyBooking.QueueName
 
 Outputs:
   TriagemFunctionArn:
@@ -128,7 +145,17 @@ Outputs:
       'Fn::GetAtt':
         - TriagemFunction
         - Arn
+
+  SQSQueueLegacyBookingURL:
+    Value:
+      'Ref': SQSQueueLegacyBooking
         
+  SQSQueueLegacyBookingArn:
+    Value:
+      'Fn::GetAtt':
+        - SQSQueueLegacyBooking
+        - Arn
+ 
   CovidStateMachineArn:
     Value:
       'Fn::GetAtt':
