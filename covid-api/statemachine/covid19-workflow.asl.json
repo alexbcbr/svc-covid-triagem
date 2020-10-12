@@ -27,7 +27,7 @@
       "Parameters": {
         "QueueUrl": "${SQSQueueLegacyBookingURL}",
         "MessageBody": {
-          "MessageTitle": "Task started by Step Functions. Waiting for callback with task token.",
+          "Paciente": "$.paciente-id",
           "TaskToken.$": "$$.Task.Token"
         }
       },

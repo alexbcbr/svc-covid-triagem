@@ -43,12 +43,6 @@ Resources:
       Description: ''
       CodeUri: marcar-consulta/
       Events:
-        MySQSEvent:
-          Type: SQS
-          Properties:
-            Queue: 
-              'Fn::GetAtt': SQSQueueLegacyBooking.Arn
-            BatchSize: 10
         APIEvent:
           Type: Api
           Properties:

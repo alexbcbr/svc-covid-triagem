@@ -12,3 +12,5 @@ curl -X POST -d '{
    "stateMachineArn": "arn:aws:states:us-east-1:771620814942:stateMachine:CovidStateMachine-LAAEqiEc4IeQ"
 }
 
+aws stepfunctions send-task-success --task-token 'AAAAKgAAAAIAAAAAAAAAATnz2PpPKNyzNj+16X9dZETzfUvsYGW65KhBMu9rrm2En+B7IycPg4XrutGExxkcqNunVpAfmwyDZi1YhDYQdf5ziJNMuVJv/M/ZT73l12NN+mXAI3cv0Vmkz4uObZSdK8gsF5a7nJDvN0cCMkg0YsoEIBcleXHdMf2Km+u8kE3vAjvqNU0vt/OOuAzo8JqUnZRBCw/YEj3/546cWoA1VgfWV5MKfLcZoMzd9LHA+/pMGcbndKfAO6pzywDSx4LFKaOkS/2WUkuyEVkFUDktAo23eZi/CUSh0OhdZAi4rHTa8ZBD72hpt+HAsIeblOA+wvtprQKSSSEMKcQTn/3VIXonhLTFQdWewtnSCouaFeREZnfQViTNABHe998O7QOEHU+BtkrkAGrsvcjhd5pUf099E2V1hfLYZmVSvNN9tiYt1bj1hm3VK+vPf9E4udKNC5IQ2LoYWveF5euCkvLa1hF0FIz3TQ1wSg/LsrvYphJMX7N8yndBpes2y+Wvzp3drpMjh6qBiVPhAdHcJFEp1Z1eu2lNnfcQzfaxYw7Mk/9HV3HuiKAVVNmYTSAuDSOTZUybv73Ih1BvIExqOVP+lsMHEogAOgqDIbUtRyHSc2a4NxoTD6QDO6+JUJsv6/Qg6g==\' --task-output '{"status": "confirmed"}'
+
