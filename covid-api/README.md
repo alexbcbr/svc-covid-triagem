@@ -1,3 +1,11 @@
+{
+    "paciente-id": "AB123456",
+    "temperatura": "36"
+}
+
+aws stepfunctions start-execution --state-machine-arn arn:aws:states:us-east-1:771620814942:stateMachine:detectar-covid19 --input "{\"paciente\":123456, \"temperatura\":38}"
+
+
 sam build && sam deploy
 
 curl -X POST -d '{

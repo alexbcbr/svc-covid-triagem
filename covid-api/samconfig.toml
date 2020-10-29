@@ -3,8 +3,8 @@ version = 0.1
 [default.deploy]
 [default.deploy.parameters]
 stack_name = "covid-app"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-av0aupym3r1f"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-16bzo7bqmipjh"
 s3_prefix = "covid-app"
-region = "us-east-1"
+region = "sa-east-1"
 confirm_changeset = false
 capabilities = "CAPABILITY_IAM"

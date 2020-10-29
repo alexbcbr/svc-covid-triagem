@@ -7,7 +7,7 @@ sqs = boto3.client('sqs')
 
 print("*** INICIO DE EXPEDIENTE ***")
 
-queue="covid-app-SQSQueueLegacyBooking-1G0C8ZPJ7JOTG"
+queue="covid-app-SQSQueueLegacyBooking-WE5H3IEX83JQ"
 
 q = sqs.get_queue_url(QueueName=queue)
 
